@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 const guestList = [
-  { id: '1', fName: 'Brad', lName: 'Pitt' },
-  { id: '2', fName: 'Kevin', lName: 'Spacey' },
-  { id: '3', fName: 'Sandra', lName: 'Bullock' },
+  { id: '1', fName: 'Brad', lName: 'Pitt', attendance: 'false' },
+  { id: '2', fName: 'Kevin', lName: 'Spacey', attendance: 'false' },
+  { id: '3', fName: 'Sandra', lName: 'Bullock', attendance: 'false' },
 ];
 
 guestList.propTypes = {
@@ -30,55 +30,73 @@ guestList.propTypes = {
   );
 } */
 
-function App() {
-  const [addNewGuest, setAddNewGuest] = useState();
+export default function App() {
+  const [guestToDelete, setGuestToDelete] = useState();
   const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState();
-  const [isChecked, setIsChecked] = useState(false);
+
   const [currentGuestList, setCurrentGuestList] = useState(guestList);
+  const [isChecked, setIsChecked] = useState(false);
+  /* const [checkboxState, setCheckboxState] = useState(
+    new Array(currentGuestList.length).fill(false),
+  ); */
+  /* const handleOnChange = (position) => {
+    const updatedCheckboxState = checkboxState.map((item, index) =>
+      index === position ? !item : item,
+    );
+    setCheckboxState(updatedCheckboxState); */
+
   return (
     <>
       <h1>Guest List</h1>
-      <label>
-        First name
-        <input
-          value={firstName}
-          onChange={(event) => {
-            const enteredFirstName = event.currentTarget.value;
-            setFirstName(enteredFirstName);
+      <div>
+        <label>
+          First name
+          <input
+            value={firstName}
+            onChange={(event) => {
+              const enteredFirstName = event.currentTarget.value;
+              setFirstName(enteredFirstName);
+            }}
+          />
+        </label>
+        <label>
+          Last name
+          <input
+            value={lastName}
+            onChange={(event) => {
+              const enteredLastName = event.currentTarget.value;
+              setLastName(enteredLastName);
+            }}
+            onKeyDown={(event) => {
+              /* Add new guest to the array of current guests */
+              const newGuest = {
+                id: currentGuestList.length + 1,
+                fName: firstName,
+                lName: lastName,
+              };
+              const newGuestList = [...currentGuestList, newGuest];
+              if (event.key === 'Enter') {
+                setCurrentGuestList(newGuestList);
+              }
+            }}
+          />
+          Press 'Enter' to Add
+        </label>
+        <button
+          onClick={() => {
+            // const shrinkedGuestList = [...currentGuestList];
+            setCurrentGuestList(
+              currentGuestList.filter(
+                (guest) =>
+                  guest.fName !== firstName && guest.lName !== lastName,
+              ),
+            );
           }}
-        />
-      </label>
-      <label>
-        Last name
-        <input
-          value={lastName}
-          onChange={(event) => {
-            const enteredLastName = event.currentTarget.value;
-            setLastName(enteredLastName);
-          }}
-          onKeyDown={(event) => {
-            /* Add new guest to the array of current guests */
-            const newGuest = {
-              id: currentGuestList.length + 1,
-              fName: firstName,
-              lName: lastName,
-            };
-            const newGuestList = [...currentGuestList, newGuest];
-            if (event.key === 'Enter') {
-              setCurrentGuestList(newGuestList);
-            }
-          }}
-        />
-        Press 'Enter' to Add
-      </label>
-      <button
-        onClick={() => {
-          const shrinkedGuestList = [...currentGuestList];
-        }}
-      >
-        Remove
-      </button>
+        >
+          Remove
+        </button>
+      </div>
       <div>
         <h2>Current List</h2>
         <div>
@@ -94,6 +112,7 @@ function App() {
                     type="checkbox"
                     aria-label="guest"
                     onChange={(event) =>
+                      /* handleOnChange(index) */
                       setIsChecked(event.currentTarget.checked)
                     }
                   />
@@ -107,5 +126,3 @@ function App() {
     </>
   );
 }
-
-export default App;
