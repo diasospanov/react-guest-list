@@ -30,12 +30,15 @@ guestList.propTypes = {
   );
 } */
 
-export default function App() {
-  const [guestToDelete, setGuestToDelete] = useState();
+export default async function App() {
+  const baseUrl = 'http://localhost:4000';
+  const response = await fetch(`${baseUrl}/guests`);
+  const allGuests = await response.json();
+  // const [guestToDelete, setGuestToDelete] = useState();
   const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState();
 
-  const [currentGuestList, setCurrentGuestList] = useState(guestList);
+  const [currentGuestList, setCurrentGuestList] = useState(allGuests);
   const [isChecked, setIsChecked] = useState(false);
   /* const [checkboxState, setCheckboxState] = useState(
     new Array(currentGuestList.length).fill(false),
