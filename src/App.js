@@ -45,7 +45,7 @@ export default function App() {
   const [lastName, setLastName] = useState('');
 
   const [currentGuestList, setCurrentGuestList] = useState(guestList);
-  const [isChecked, setIsChecked] = useState(false);
+  // const [isChecked, setIsChecked] = useState(false);
 
   /* async function addGuest() {
     const baseUrl = 'http://localhost:4000';
@@ -129,9 +129,12 @@ export default function App() {
                     checked={guest.attending}
                     type="checkbox"
                     aria-label="guest"
-                    onChange={(event) =>
-                      (guest.attending = !event.currentTarget.checked)
-                    }
+                    onChange={() => {
+                      const attendingGuest = currentGuestList.filter(
+                        (guestToCheck) => guestToCheck.id !== guest.id,
+                      );
+                      guest.attending = !attendingGuest.attending;
+                    }}
                   />
                   {guest.attending ? '' : 'not'} attending
                 </label>
