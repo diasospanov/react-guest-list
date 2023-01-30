@@ -1,16 +1,16 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const guestList = [
-  { id: '1', fName: 'Brad', lName: 'Pitt', attendance: 'false' },
-  { id: '2', fName: 'Kevin', lName: 'Spacey', attendance: 'false' },
-  { id: '3', fName: 'Sandra', lName: 'Bullock', attendance: 'false' },
+  { id: 1, fName: 'Brad', lName: 'Pitt', attending: false },
+  { id: 2, fName: 'Kevin', lName: 'Spacey', attending: true },
+  { id: 3, fName: 'Sandra', lName: 'Bullock', attending: false },
 ];
 
 guestList.propTypes = {
   guest: PropTypes.shape({
-    firstName: PropTypes.string.isRequired,
-    lastName: PropTypes.string.isRequired,
+    fName: PropTypes.string.isRequired,
+    lName: PropTypes.string.isRequired,
   }),
 };
 
@@ -30,24 +30,38 @@ guestList.propTypes = {
   );
 } */
 
-export default async function App() {
-  const baseUrl = 'http://localhost:4000';
-  const response = await fetch(`${baseUrl}/guests`);
-  const allGuests = await response.json();
-  // const [guestToDelete, setGuestToDelete] = useState();
-  const [firstName, setFirstName] = useState();
-  const [lastName, setLastName] = useState();
+export default function App() {
+  /* useEffect(() => {
+    async function fetchUsers() {
+      const baseUrl = 'http://localhost:4000';
+      const response = await fetch(`${baseUrl}/guests`);
+      const allGuests = await response.json();
+      console.log(allGuests);
+    }
+    fetchUsers().catch((error) => console.log(error));
+  }, []); */
 
-  const [currentGuestList, setCurrentGuestList] = useState(allGuests);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+
+  const [currentGuestList, setCurrentGuestList] = useState(guestList);
   const [isChecked, setIsChecked] = useState(false);
-  /* const [checkboxState, setCheckboxState] = useState(
-    new Array(currentGuestList.length).fill(false),
-  ); */
-  /* const handleOnChange = (position) => {
-    const updatedCheckboxState = checkboxState.map((item, index) =>
-      index === position ? !item : item,
-    );
-    setCheckboxState(updatedCheckboxState); */
+
+  /* async function addGuest() {
+    const baseUrl = 'http://localhost:4000';
+    const response = await fetch(`${baseUrl}/guests`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: currentGuestList.length + 1,
+        fName: firstName,
+        lName: lastName,
+      }),
+    });
+    const createdGuest = await response.json();
+  } */
 
   return (
     <>
@@ -73,13 +87,14 @@ export default async function App() {
             }}
             onKeyDown={(event) => {
               /* Add new guest to the array of current guests */
-              const newGuest = {
-                id: currentGuestList.length + 1,
-                fName: firstName,
-                lName: lastName,
-              };
-              const newGuestList = [...currentGuestList, newGuest];
+
               if (event.key === 'Enter') {
+                const newGuest = {
+                  id: currentGuestList.length + 1,
+                  fName: firstName,
+                  lName: lastName,
+                };
+                const newGuestList = [...currentGuestList, newGuest];
                 setCurrentGuestList(newGuestList);
               }
             }}
@@ -105,21 +120,20 @@ export default async function App() {
         <div>
           {currentGuestList.map((guest) => {
             return (
-              <div data-test-id="guest" key={`guest-data-${guest.id.value}`}>
+              <div data-test-id="guest" key={`guest-data-${guest.id}`}>
                 <h3>
                   {guest.fName} {guest.lName}
                 </h3>
                 <label>
                   <input
-                    checked={isChecked}
+                    checked={guest.attending}
                     type="checkbox"
                     aria-label="guest"
                     onChange={(event) =>
-                      /* handleOnChange(index) */
-                      setIsChecked(event.currentTarget.checked)
+                      (guest.attending = !event.currentTarget.checked)
                     }
                   />
-                  {isChecked ? '' : 'not'} attending
+                  {guest.attending ? '' : 'not'} attending
                 </label>
               </div>
             );

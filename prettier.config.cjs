@@ -1,7 +1,8 @@
 /** @type {import('prettier').Options} */
 const config = {
   singleQuote: true,
-  trailingComma: "all",
+  trailingComma: 'all',
+  topLevelAwait: true,
 };
 
 module.exports = config;
