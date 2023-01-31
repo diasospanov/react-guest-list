@@ -93,13 +93,6 @@ export default function App() {
           />
           Press 'Enter' to Add
         </label>
-        <button
-          onClick={() => {
-            removeGuest().catch((error) => console.log(error));
-          }}
-        >
-          Remove
-        </button>
       </div>
       <div>
         <h2>Current List</h2>
