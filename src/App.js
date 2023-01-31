@@ -6,11 +6,16 @@ export default function App() {
   const [fName, setFName] = useState('');
   const [lName, setLName] = useState('');
 
+  const [loading, setLoading] = useState(true);
+  const [disabled, setDisabled] = useState(true);
+
   const [currentGuestList, setCurrentGuestList] = useState([]);
   async function fetchUsers() {
     const response = await fetch(`${baseUrl}/guests`);
     const allGuests = await response.json();
     setCurrentGuestList(allGuests);
+    setLoading(false);
+    setDisabled(false);
     console.log(allGuests);
   }
   useEffect(() => {
@@ -63,7 +68,12 @@ export default function App() {
     setCurrentGuestList(listToCheck);
     fetchUsers().catch((error) => console.log(error));
   }
-  return (
+  return loading ? (
+    <>
+      <h2>Loading...</h2>
+      <form disabled={disabled} />
+    </>
+  ) : (
     <>
       <h1>Guest List</h1>
       <div>
