@@ -93,6 +93,7 @@ export default function App() {
                   id: currentGuestList.length + 1,
                   fName: firstName,
                   lName: lastName,
+                  attending: false,
                 };
                 const newGuestList = [...currentGuestList, newGuest];
                 setCurrentGuestList(newGuestList);
@@ -130,10 +131,19 @@ export default function App() {
                     type="checkbox"
                     aria-label="guest"
                     onChange={() => {
-                      const attendingGuest = currentGuestList.filter(
-                        (guestToCheck) => guestToCheck.id !== guest.id,
+                      const listToCheck = [...currentGuestList];
+                      const guestIndex = listToCheck.findIndex(
+                        (guestToCheck) => guestToCheck.id === guest.id,
                       );
-                      guest.attending = !attendingGuest.attending;
+                      listToCheck[guestIndex].attending = !guest.attending;
+                      setCurrentGuestList(listToCheck);
+
+                      /* const attendingGuest =  listToCheck.filter(
+                        (guestToCheck) => guestToCheck.id !== guest.id,
+                      ); */
+
+                      // guest.attending = !attendingGuest.attending;
+                      // setCurrentGuestList(currentGuestList);
                     }}
                   />
                   {guest.attending ? '' : 'not'} attending
