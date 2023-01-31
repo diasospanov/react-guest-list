@@ -1,18 +1,4 @@
-import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-
-const guestList = [
-  { id: 1, fName: 'Brad', lName: 'Pitt', attending: false },
-  { id: 2, fName: 'Kevin', lName: 'Spacey', attending: true },
-  { id: 3, fName: 'Sandra', lName: 'Bullock', attending: false },
-];
-
-guestList.propTypes = {
-  guest: PropTypes.shape({
-    fName: PropTypes.string.isRequired,
-    lName: PropTypes.string.isRequired,
-  }),
-};
 
 export default function App() {
   const baseUrl = 'http://localhost:4000';
@@ -30,7 +16,6 @@ export default function App() {
   useEffect(() => {
     fetchUsers().catch((error) => console.log(error));
   }, []);
-  // const [isChecked, setIsChecked] = useState(false);
 
   async function addGuest() {
     const response = await fetch(`${baseUrl}/guests`, {
@@ -47,6 +32,8 @@ export default function App() {
     const newGuestList = [...currentGuestList, createdGuest];
     setCurrentGuestList(newGuestList);
     fetchUsers().catch((error) => console.log(error));
+    setFName('');
+    setLName('');
   }
 
   async function removeGuest(id) {
@@ -59,7 +46,23 @@ export default function App() {
     setCurrentGuestList(listToDeleteGuest);
     fetchUsers().catch((error) => console.log(error));
   }
-
+  async function updateGuestStatus(id, value) {
+    const response = await fetch(`${baseUrl}/guests/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ attending: !value }),
+    });
+    const updatedGuest = await response.json();
+    const listToCheck = [...currentGuestList];
+    const guestIndex = listToCheck.findIndex(
+      (guestToCheck) => guestToCheck.id === updatedGuest.id,
+    );
+    listToCheck[guestIndex].attending = updatedGuest.attending;
+    setCurrentGuestList(listToCheck);
+    fetchUsers().catch((error) => console.log(error));
+  }
   return (
     <>
       <h1>Guest List</h1>
@@ -83,18 +86,8 @@ export default function App() {
               setLName(enteredLastName);
             }}
             onKeyDown={(event) => {
-              /* Add new guest to the array of current guests */
-
               if (event.key === 'Enter') {
                 addGuest().catch((error) => console.log(error));
-                /* const newGuest = {
-                  id: currentGuestList.length + 1,
-                  fName: firstName,
-                  lName: lastName,
-                  attending: false,
-                };
-                const newGuestList = [...currentGuestList, newGuest];
-                setCurrentGuestList(newGuestList); */
               }
             }}
           />
@@ -103,12 +96,6 @@ export default function App() {
         <button
           onClick={() => {
             removeGuest().catch((error) => console.log(error));
-            /* setCurrentGuestList(
-              currentGuestList.filter(
-                (guest) =>
-                  guest.firstName !== firstName && guest.lastName !== lastName,
-              ),
-            ); */
           }}
         >
           Remove
@@ -121,6 +108,7 @@ export default function App() {
             return (
               <div data-test-id="guest" key={`guest-data-${guest.id}`}>
                 <button
+                  aria-label={`Remove ${guest.firstName} ${guest.lastName}`}
                   onClick={() => {
                     removeGuest(guest.id).catch((error) => console.log(error));
                   }}
@@ -134,21 +122,11 @@ export default function App() {
                   <input
                     checked={guest.attending}
                     type="checkbox"
-                    aria-label="guest"
+                    aria-label={`${guest.firstName} ${guest.lastName} attending status`}
                     onChange={() => {
-                      const listToCheck = [...currentGuestList];
-                      const guestIndex = listToCheck.findIndex(
-                        (guestToCheck) => guestToCheck.id === guest.id,
+                      updateGuestStatus(guest.id, guest.attending).catch(
+                        (error) => console.log(error),
                       );
-                      listToCheck[guestIndex].attending = !guest.attending;
-                      setCurrentGuestList(listToCheck);
-
-                      /* const attendingGuest =  listToCheck.filter(
-                        (guestToCheck) => guestToCheck.id !== guest.id,
-                      ); */
-
-                      // guest.attending = !attendingGuest.attending;
-                      // setCurrentGuestList(currentGuestList);
                     }}
                   />
                   {guest.attending ? '' : 'not'} attending
