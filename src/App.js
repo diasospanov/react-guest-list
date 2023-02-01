@@ -75,35 +75,37 @@ export default function App() {
     </>
   ) : (
     <>
-      <form>
-        <h1>Guest List</h1>
-        <label htmlFor="First name">
-          First name
-          <input
-            value={fName}
-            onChange={(event) => {
-              const enteredFirstName = event.currentTarget.value;
-              setFName(enteredFirstName);
-            }}
-          />
-        </label>
-        <label htmlFor="Last name">
-          Last name
-          <input
-            value={lName}
-            onChange={(event) => {
-              const enteredLastName = event.currentTarget.value;
-              setLName(enteredLastName);
-            }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                addGuest().catch((error) => console.log(error));
-              }
-            }}
-          />
-          Press 'Enter' to Add
-        </label>
-      </form>
+      <div>
+        <form>
+          <h1>Guest List</h1>
+          <label htmlFor="First name">
+            First name
+            <input
+              value={fName}
+              onChange={(event) => {
+                const enteredFirstName = event.currentTarget.value;
+                setFName(enteredFirstName);
+              }}
+            />
+          </label>
+          <label htmlFor="Last name">
+            Last name
+            <input
+              value={lName}
+              onChange={(event) => {
+                const enteredLastName = event.currentTarget.value;
+                setLName(enteredLastName);
+              }}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  addGuest().catch((error) => console.log(error));
+                }
+              }}
+            />
+            Press 'Enter' to Add
+          </label>
+        </form>
+      </div>
       <div>
         <h2>Current List</h2>
         <div>
