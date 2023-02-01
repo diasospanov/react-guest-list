@@ -75,8 +75,8 @@ export default function App() {
     </>
   ) : (
     <>
-      <h1>Guest List</h1>
       <div>
+        <h1>Guest List</h1>
         <label>
           First name
           <input
