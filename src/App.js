@@ -75,7 +75,7 @@ export default function App() {
     </>
   ) : (
     <>
-      <div>
+      <form>
         <h1>Guest List</h1>
         <label>
           First name
@@ -103,7 +103,7 @@ export default function App() {
           />
           Press 'Enter' to Add
         </label>
-      </div>
+      </form>
       <div>
         <h2>Current List</h2>
         <div>
