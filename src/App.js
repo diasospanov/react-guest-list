@@ -77,7 +77,7 @@ export default function App() {
     <>
       <form>
         <h1>Guest List</h1>
-        <label>
+        <label htmlFor="First name">
           First name
           <input
             value={fName}
@@ -87,7 +87,7 @@ export default function App() {
             }}
           />
         </label>
-        <label>
+        <label htmlFor="Last name">
           Last name
           <input
             value={lName}
